@@ -1,6 +1,6 @@
 import cbt._
 
-class Build(val context: Context) extends BaseBuild{
+class Build(val context: Context) extends BaseBuild with Scalariform {
   // FIXME: somehow consolidate this with cbt's own boot-strapping from source.
   override def dependencies = {
     super.dependencies ++ Resolver(mavenCentral).bind(
