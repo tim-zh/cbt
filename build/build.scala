@@ -12,5 +12,5 @@ class Build(val context: Context) extends BaseBuild{
   }
   override def sources = Seq(
     "nailgun_launcher", "stage1", "stage2", "compatibility"
-  ).map(d => projectDirectory ++ ("/" + d))
+  ).map(projectDirectory / _)
 }

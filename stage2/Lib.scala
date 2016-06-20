@@ -38,7 +38,7 @@ final class Lib(logger: Logger) extends Stage1Lib(logger) with Scaffold{
   def loadRoot(context: Context, default: Context => BuildInterface = new BasicBuild(_)): BuildInterface = {
     context.logger.composition( context.logger.showInvocation("Build.loadRoot",context.projectDirectory) )
     def findStartDir(projectDirectory: File): File = {
-      val buildDir = realpath( projectDirectory ++ "/build" )
+      val buildDir = realpath( projectDirectory / "build" )
       if(buildDir.exists) findStartDir(buildDir) else projectDirectory
     }
 
@@ -57,14 +57,14 @@ final class Lib(logger: Logger) extends Stage1Lib(logger) with Scaffold{
 
   def srcJar(sourceFiles: Seq[File], artifactId: String, scalaMajorVersion: String, version: String, jarTarget: File): Option[File] = {
     lib.jarFile(
-      jarTarget ++ ("/"++artifactId++"_"++scalaMajorVersion++"-"++version++"-sources.jar"),
+      jarTarget / artifactId ++ "_" ++ scalaMajorVersion ++ "-" ++ version ++ "-sources.jar",
       sourceFiles
     )
   }
 
   def jar(artifactId: String, scalaMajorVersion: String, version: String, compileTarget: File, jarTarget: File): Option[File] = {
     lib.jarFile(
-      jarTarget ++ ("/"++artifactId++"_"++scalaMajorVersion++"-"++version++".jar"),
+      jarTarget / artifactId ++ "_" ++ scalaMajorVersion ++ "-" ++ version ++ ".jar",
       Seq(compileTarget)
     )
   }
@@ -101,7 +101,7 @@ final class Lib(logger: Logger) extends Stage1Lib(logger) with Scaffold{
         )
       }
       lib.jarFile(
-        jarTarget ++ ("/"++artifactId++"_"++scalaMajorVersion++"-"++version++"-javadoc.jar"),
+        jarTarget / artifactId ++ "_" ++ scalaMajorVersion ++ "-" ++ version ++ "-javadoc.jar",
         Vector(apiTarget)
       )
     }
@@ -343,8 +343,7 @@ final class Lib(logger: Logger) extends Stage1Lib(logger) with Scaffold{
           </dependencies>
       </project>
     // FIXME: do not build this file name including scalaMajorVersion in multiple places
-    val path = jarTarget.toString ++ ( "/" ++ artifactId++ "_" ++ scalaMajorVersion ++ "-" ++ version  ++ ".pom" )
-    val file = new File(path)
+    val file = jarTarget / artifactId ++ "_" ++ scalaMajorVersion ++ "-" ++ version  ++ ".pom"
     write(file, "<?xml version='1.0' encoding='UTF-8'?>\n" ++ xml.toString)
   }
 

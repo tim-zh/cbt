@@ -8,9 +8,9 @@ trait BuildBuild extends BaseBuild{
   )
 
   object plugins{
-    final val scalaTest = DirectoryDependency( managedContext.cbtHome ++ "/plugins/scalatest" )
-    final val sbtLayout = DirectoryDependency( managedContext.cbtHome ++ "/plugins/sbt_layout" )
-    final val scalaJs   = DirectoryDependency( managedContext.cbtHome ++ "/plugins/scalajs" )
+    final val scalaTest = DirectoryDependency( managedContext.cbtHome / "plugins/scalatest" )
+    final val sbtLayout = DirectoryDependency( managedContext.cbtHome / "plugins/sbt_layout" )
+    final val scalaJs   = DirectoryDependency( managedContext.cbtHome / "plugins/scalajs" )
   }
 
   override def dependencies =
@@ -19,7 +19,7 @@ trait BuildBuild extends BaseBuild{
   private object managedBuildCache extends Cache[BuildInterface]
   def managedBuild = managedBuildCache{
     try{
-      val managedBuildFile = projectDirectory++"/build.scala"
+      val managedBuildFile = projectDirectory / "build.scala"
       logger.composition("Loading build at "++managedContext.projectDirectory.toString)
       (
         if(managedBuildFile.exists){

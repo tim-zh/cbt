@@ -46,18 +46,18 @@ trait BaseBuild extends DependencyImplementation with BuildInterface with Trigge
     )
 
   // ========== paths ==========
-  final private val defaultSourceDirectory = projectDirectory ++ "/src"
+  final private val defaultSourceDirectory = projectDirectory / "src"
 
   /** base directory where stuff should be generated */
-  def target: File = projectDirectory ++ "/target"
+  def target: File = projectDirectory / "target"
   /** base directory where stuff should be generated for this scala version*/
-  def scalaTarget: File = target ++ s"/scala-$scalaMajorVersion"
+  def scalaTarget: File = target / "scala-" ++ scalaMajorVersion
   /** directory where jars (and the pom file) should be put */
   def jarTarget: File = scalaTarget
   /** directory where the scaladoc should be put */
-  def apiTarget: File = scalaTarget ++ "/api"
+  def apiTarget: File = scalaTarget / "api"
   /** directory where the class files should be put (in package directories) */
-  def compileTarget: File = scalaTarget ++ "/classes"
+  def compileTarget: File = scalaTarget / "classes"
   /**
   File which cbt uses to determine if it needs to trigger an incremental re-compile.
   Last modified date is the time when the last successful compilation started.
@@ -94,7 +94,7 @@ trait BaseBuild extends DependencyImplementation with BuildInterface with Trigge
   def triggerLoopFiles: Seq[File] = sources ++ transitiveDependencies.collect{ case b: TriggerLoop => b.triggerLoopFiles }.flatten
 
   def localJars           : Seq[File] =
-    Seq(projectDirectory ++ "/lib")
+    Seq(projectDirectory / "lib")
       .filter(_.exists)
       .flatMap(_.listFiles)
       .filter(_.toString.endsWith(".jar"))
@@ -138,7 +138,7 @@ trait BaseBuild extends DependencyImplementation with BuildInterface with Trigge
 
   def test: Option[ExitCode] = 
     Some(new lib.ReflectBuild(
-      DirectoryDependency(projectDirectory++"/test").build
+      DirectoryDependency(projectDirectory / "test").build
     ).callNullary(Some("run")))
   def t = test
   def rt = recursiveUnsafe(Some("test"))

@@ -89,7 +89,7 @@ class ToolsTasks(
           val n = valName(d)
           s"""
     // ${d.groupId}:${d.artifactId}:${d.version}
-    download(new URL(mavenUrl + "${d.basePath}.jar"), Paths.get(${n}File), "${d.jarSha1}");
+    download(new URL(mavenUrl + "/${d.basePath}.jar"), Paths.get(${n}File), "${d.jarSha1}");
 
     String[] ${n}ClasspathArray = new String[]{${deps.sortBy(_.jar).map(valName(_)+"File").mkString(", ")}};
     String ${n}Classpath = classpath( ${n}ClasspathArray );
@@ -124,9 +124,9 @@ ${files.map(d => s"""  String ${valName(d)}File;""").mkString("\n")}
   public EarlyDependencies(
     String mavenCache, String mavenUrl, ClassLoaderCache2<ClassLoader> classLoaderCache, ClassLoader rootClassLoader
   ) throws Exception {
-${files.map(d => s"""    ${valName(d)}File = mavenCache + "${d.basePath}.jar";""").mkString("\n")}
+${files.map(d => s"""    ${valName(d)}File = mavenCache + "/${d.basePath}.jar";""").mkString("\n")}
 
-${scalaDeps.map(d => s"""    download(new URL(mavenUrl + "${d.basePath}.jar"), Paths.get(${valName(d)}File), "${d.jarSha1}");""").mkString("\n")}
+${scalaDeps.map(d => s"""    download(new URL(mavenUrl + "/${d.basePath}.jar"), Paths.get(${valName(d)}File), "${d.jarSha1}");""").mkString("\n")}
 ${assignments.mkString("\n")}
   
     classLoader = scalaXml_${scalaXmlVersion.replace(".","_")}_;
@@ -136,7 +136,7 @@ ${assignments.mkString("\n")}
   }
 }
 """
-    val file = nailgun ++ ("/" ++ "EarlyDependencies.java")
+    val file = nailgun / "EarlyDependencies.java"
     lib.write( file, code )
     println( Console.GREEN ++ "Wrote " ++ file.string ++ Console.RESET )
   }

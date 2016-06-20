@@ -35,7 +35,7 @@ trait ScalaJsBuild extends BaseBuild {
   def scalaJsOptionsFastOpt: Seq[String] = scalaJsOptions
   def scalaJsOptionsFullOpt: Seq[String] = scalaJsOptions
 
-  private def output(mode: ScalaJsOutputMode) = target ++ s"/$projectName-${mode.fileSuffix}.js"
+  private def output(mode: ScalaJsOutputMode) = target / projectName ++ "-" ++ mode.fileSuffix ++ ".js"
   protected def fastOptJSFile: File = output(FastOptJS)
   protected def fullOptJSFile: File = output(FullOptJS)
 

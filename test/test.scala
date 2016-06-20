@@ -36,10 +36,10 @@ object Main{
 
     def runCbt(path: String, _args: Seq[String])(implicit logger: Logger): Result = {
       import java.io._
-      val allArgs: Seq[String] = ((cbtHome.string ++ "/cbt") +: "direct" +: (_args ++ args.propsRaw))
+      val allArgs: Seq[String] = ((cbtHome / "cbt").string +: "direct" +: (_args ++ args.propsRaw))
       logger.test(allArgs.toString)
       val pb = new ProcessBuilder( allArgs :_* )
-      pb.directory(cbtHome ++ ("/test/" ++ path))
+      pb.directory(cbtHome / "test" / path)
       val p = pb.start
       val berr = new BufferedReader(new InputStreamReader(p.getErrorStream));
       val bout = new BufferedReader(new InputStreamReader(p.getInputStream));
@@ -74,14 +74,14 @@ object Main{
 
     logger.test( "Running tests " ++ _args.toList.toString )
 
-    val cache = cbtHome ++ "/cache"
-    val mavenCache = cache ++ "/maven"
+    val cache = cbtHome / "cache"
+    val mavenCache = cache / "maven"
     val cbtHasChanged = true
     def Resolver(urls: URL*) = MavenResolver(cbtHasChanged, mavenCache, urls: _*)
 
     {
       val noContext = ContextImplementation(
-        cbtHome ++ "/test/nothing",
+        cbtHome / "test/nothing",
         cbtHome,
         Array(),
         Array(),
@@ -94,7 +94,7 @@ object Main{
         cache,
         cbtHome,
         cbtHome,
-        cbtHome ++ "/compatibilityTarget",
+        cbtHome / "compatibilityTarget",
         null
       )
 

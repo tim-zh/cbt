@@ -6,7 +6,7 @@ trait Scaffold{
   def logger: Logger
 
   private def createFile( projectDirectory: File, fileName: String, code: String ){
-    val outputFile = projectDirectory ++ ("/" ++ fileName)
+    val outputFile = projectDirectory / fileName
     Stage0Lib.write( outputFile, code, StandardOpenOption.CREATE_NEW )
     import scala.Console._
     println( GREEN ++ "Created " ++ fileName ++ RESET )
@@ -34,7 +34,7 @@ class Build(val context: Context) extends BaseBuild{
     super.dependencies ++ // don't forget super.dependencies here
     Seq(    
       // source dependency
-      DirectoryDependency( projectDirectory ++ "/subProject" )
+      DirectoryDependency( projectDirectory / "subProject" )
     ) ++
     Resolver( mavenCentral ).bind(
       // CBT-style Scala dependencies

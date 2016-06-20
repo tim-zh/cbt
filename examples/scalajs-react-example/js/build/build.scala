@@ -3,7 +3,7 @@ class Build(val context: Context) extends ScalaJsBuild{
   override val projectName = "my-project"
 
   override def sources = super.sources ++ Seq(
-    projectDirectory.getParentFile ++ "/shared"
+    projectDirectory.getParentFile / "shared"
   )
 
   override def dependencies = (
@@ -17,6 +17,6 @@ class Build(val context: Context) extends ScalaJsBuild{
   )
 
   override protected def fastOptJSFile = {
-    projectDirectory.getParentFile ++ "/server/public" ++ ("/"++super.fastOptJSFile.getName)
+    projectDirectory.getParentFile / "server/public" / super.fastOptJSFile.getName
   }
 }

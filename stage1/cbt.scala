@@ -14,14 +14,22 @@ object `package`{
 
   private val lib = new BaseLib
   implicit class FileExtensionMethods( file: File ){
-    def /( s: String ): File = file ++ ("/" ++ s)
+    def /( s: String ): File = {
+      if(s == "") throw new Exception(
+        """found / "". Trying to append an empty string with / does nothing (not even add the /). Use if-else if you need to."""
+      )
+      if(s startsWith "/") throw new Exception(
+        """found / "/...". Trying to append a String that starts with "/" to a File using the / operator. This is probably by mistake. Use .stripPrefix("/") if you need to."""
+      )
+      new File( file.toString ++ "/" ++ s )
+    }
     def ++( s: String ): File = {
       if(s endsWith "/") throw new Exception(
         """Trying to append a String that ends in "/" to a File would loose the trailing "/". Use .stripSuffix("/") if you need to."""
       )
       new File( file.toString ++ s )
     }
-    def parent = lib.realpath(file ++ "/..")
+    def parent = lib.realpath(file / "..")
     def string = file.toString
   }
   implicit class URLExtensionMethods( url: URL ){

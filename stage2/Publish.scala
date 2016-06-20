@@ -35,7 +35,7 @@ trait Publish extends PackageJars{
   )
 
   // ========== publish ==========
-  final protected def releaseFolder = s"/${groupId.replace(".","/")}/${artifactId}_$scalaMajorVersion/$version/"
+  final protected def releaseFolder = s"${groupId.replace(".","/")}/${artifactId}_$scalaMajorVersion/$version/"
   private def snapshotUrl = new URL("https://oss.sonatype.org/content/repositories/snapshots")
   private def releaseUrl = new URL("https://oss.sonatype.org/service/local/staging/deploy/maven2")
   def publishUrl = if(version.endsWith("-SNAPSHOT")) snapshotUrl else releaseUrl
@@ -43,7 +43,7 @@ trait Publish extends PackageJars{
 
   protected def sonatypeCredentials = {
     // FIXME: this should probably not use cbtHome, but some reference to the system's host cbt
-    new String(readAllBytes((context.cbtRootHome ++ "/sonatype.login").toPath)).trim
+    new String(readAllBytes((context.cbtRootHome / "sonatype.login").toPath)).trim
   }
 
   def publishSnapshot: Unit = {
@@ -52,12 +52,12 @@ trait Publish extends PackageJars{
 
   def publishUnsigned: Unit = {
     lib.publishUnsigned(
-      sourceFiles, `package` :+ pom, publishUrl ++ releaseFolder, sonatypeCredentials
+      sourceFiles, `package` :+ pom, publishUrl / releaseFolder, sonatypeCredentials
     )
   }
   def publishSigned: Unit = {
     lib.publishSigned(
-      sourceFiles, `package` :+ pom, publishUrl ++ releaseFolder, sonatypeCredentials
+      sourceFiles, `package` :+ pom, publishUrl / releaseFolder, sonatypeCredentials
     )
   }
 }

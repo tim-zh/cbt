@@ -219,9 +219,9 @@ case class BoundMavenDependency(
   override def needsUpdate = false
 
   private val groupPath = groupId.split("\\.").mkString("/")
-  protected[cbt] def basePath = s"/$groupPath/$artifactId/$version/$artifactId-$version" ++ classifier.name.map("-"++_).getOrElse("")
+  protected[cbt] def basePath = s"$groupPath/$artifactId/$version/$artifactId-$version" ++ classifier.name.map("-"++_).getOrElse("")
   
-  //private def coursierJarFile = userHome++"/.coursier/cache/v1/https/repo1.maven.org/maven2"++basePath++".jar"
+  //private def coursierJarFile = userHome / ".coursier/cache/v1/https/repo1.maven.org/maven2" / basePath ++ ".jar"
 
   def exportedJars = Seq( jar )
   override def exportedClasspath = ClassPath( exportedJars )
@@ -230,8 +230,8 @@ case class BoundMavenDependency(
 
   private def resolve(suffix: String, hash: Option[String]): File = {
     logger.resolver("Resolving "+this)
-    val file = mavenCache ++ basePath ++ "." ++ suffix
-    val urls = repositories.map(_ ++ basePath ++ "." ++ suffix)
+    val file = mavenCache / basePath ++ "." ++ suffix
+    val urls = repositories.map(_ / basePath ++ "." ++ suffix)
     urls.find(
       lib.download(_, file, hash)
     ).getOrElse(
@@ -304,7 +304,7 @@ case class BoundMavenDependency(
     if(classifier == Classifier.sources) Seq()
     else {
       lib.cacheOnDisk(
-        cbtHasChanged, mavenCache ++ basePath ++ ".pom.dependencies"
+        cbtHasChanged, mavenCache / basePath ++ ".pom.dependencies"
       )( MavenDependency.deserialize )( _.serialize ){
         (pomXml \ "dependencies" \ "dependency").collect{
           case xml if ( (xml \ "scope").text == "" || (xml \ "scope").text == "compile" ) && (xml \ "optional").text != "true" =>
