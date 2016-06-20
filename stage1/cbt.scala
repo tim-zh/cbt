@@ -14,6 +14,7 @@ object `package`{
 
   private val lib = new BaseLib
   implicit class FileExtensionMethods( file: File ){
+    def /( s: String ): File = file ++ ("/" ++ s)
     def ++( s: String ): File = {
       if(s endsWith "/") throw new Exception(
         """Trying to append a String that ends in "/" to a File would loose the trailing "/". Use .stripSuffix("/") if you need to."""
@@ -24,6 +25,7 @@ object `package`{
     def string = file.toString
   }
   implicit class URLExtensionMethods( url: URL ){
+    def /( s: String ): URL = url ++ ("/" ++ s)
     def ++( s: String ): URL = new URL( url.toString ++ s )
     def string = url.toString
   }
