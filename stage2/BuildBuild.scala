@@ -54,6 +54,11 @@ trait BuildBuild extends BaseBuild{
               //*/
             }
         } else {
+          if( projectDirectory.listFiles.exists( _.getName.endsWith(".scala") ) ){
+            throw new Exception(
+              "No file build.scala (lower case) found in " ++ projectDirectory.getPath
+            )
+          }
           if( projectDirectory.getParentFile.getName == "build" ){
             new BasicBuild( managedContext ) with BuildBuild
           } else {
