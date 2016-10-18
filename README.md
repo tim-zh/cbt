@@ -106,9 +106,22 @@ Add one to your `$PATH`, e.g. symlink it from `~/bin/cbt`.
 Check that it works by calling `cbt`. You should see CBT compiling itself
 and showing a list of built-in tasks.
 
-Great, you're all set up. Now, let's use cbt for an example project.
+Great, you're all set up. Now, let's use cbt to set up an example project.
 
-### Creating your first project
+There are two ways to do that:
+
+### Creating a project in web UI
+
+Run:
+
+```
+$ cbt tools gui
+```
+
+This should start UI server at http://localhost:9080. There you can create Main class, CBT build,
+add libraries, plugins, readme and other things.
+
+### Creating a project in console
 
 Create a new directory and cd into it. E.g. `my-project`.
 
